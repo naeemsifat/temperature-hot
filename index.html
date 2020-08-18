@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url(images/bg-image.jpg) no-repeat;
+            background-size: cover;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form class="col-md-6 m-auto py-5">
+            <div class="input-group mb-3">
+                <input id="city-name" type="text" class="form-control" placeholder="Enter a location for Weather ...">
+                <div class="input-group-append">
+                    <button id="search-btn" type="button" class="btn btn-danger">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="weather-status text-white text-center">
+            <img id="img-update" src="https://openweathermap.org/img/wn/02d@2x.png" alt="">
+            <h1 id="current-city">Dhaka</h1>
+            <h3><span id="temp">38.06</span>&deg;C</h3>
+            <h1 class="lead" id="city-condition">Clouds</h1>
+        </div>
+    </div>
+    
+    <script>
+        primaryLoad();
+
+        document.getElementById("search-btn").addEventListener("click",function(){
+            const cityName = document.getElementById('city-name').value;
+            if(cityName == "")
+            {
+                alert("Please enter the city name");
+            }
+            else
+            {
+                fetch(`http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=69fb8e4cec8c4143d8522d86bc761bd2`)
+                .then(res => res.json())
+                .then(data => {
+                    const cityUpdate = data.name;
+                    document.getElementById('current-city').innerText = cityUpdate;
+                    const tempUpdate = data.main.temp;
+                    document.getElementById('temp').innerText = tempUpdate;
+                    const condition = data.weather[0].description;
+                    document.getElementById('city-condition').innerText = condition;
+                    const iconUpdate = data.weather[0].icon;
+                    document.getElementById('img-update').src = `https://openweathermap.org/img/wn/${iconUpdate}@2x.png`;
+                })
+            }
+        })
+
+        function primaryLoad(){
+            fetch('http://api.openweathermap.org/data/2.5/weather?q=Dhaka&units=metric&appid=69fb8e4cec8c4143d8522d86bc761bd2')
+            .then(res => res.json())
+            .then(data => {
+                const tempUpdate = data.main.temp;
+                document.getElementById('temp').innerText = tempUpdate;
+                const condition = data.weather[0].description;
+                document.getElementById('city-condition').innerText = condition;
+                const iconUpdate = data.weather[0].icon;
+                document.getElementById('img-update').src = `https://openweathermap.org/img/wn/${iconUpdate}@2x.png`;
+                
+            })
+        }
+    </script>
+
+</body>
+
+</html>
